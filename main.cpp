@@ -1,7 +1,11 @@
+#include "src/board.hpp"
+
 #include <iostream>
 
+// Driver code
 int main()
 {
-    std::cout << "Hello, World!" << std::endl;
+    jester::board const board;
+    std::cout << board << std::endl;
     return 0;
 }
