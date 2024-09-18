@@ -2,7 +2,6 @@
 #define BITBOARD_HPP
 
 #include <cinttypes>
-#include <complex>
 #include <iostream>
 
 namespace jester
@@ -26,68 +25,28 @@ namespace jester
     class bitboard final
     {
     public:
-        bitboard() : board_(0ULL)
-        {
-        }
+        explicit bitboard();
+        explicit bitboard(U64 board);
 
-        explicit bitboard(U64 const board) : board_(board)
-        {
-        }
+        [[nodiscard]] U64 get_board() const;
 
-        ~bitboard() = default;
+        [[nodiscard]] static U64 to_bitboard(Square square);
+        [[nodiscard]] static Square to_square(bitboard bitboard);
 
-        [[nodiscard]] U64 get_board() const
-        {
-            return this->board_;
-        }
+        [[nodiscard]] friend bitboard operator&(bitboard x, bitboard y);
+        [[nodiscard]] friend bitboard operator|(bitboard x, bitboard y);
+        [[nodiscard]] friend bitboard operator^(bitboard x, bitboard y);
 
-        [[nodiscard]] static U64 to_bitboard(Square const square)
-        {
-            return 1ULL << square;
-        }
+        [[nodiscard]] U64 get_bit(Square square) const;
+        [[nodiscard]] U64 operator[](Square square) const;
 
-        [[nodiscard]] static Square to_square(bitboard const bitboard)
-        {
-            return static_cast<Square>(std::log(bitboard.get_board()) / std::log(2));
-        }
+        U64& set_bit(Square square);
+        U64& operator[](Square square);
 
-        [[nodiscard]] friend bitboard operator&(bitboard const x, bitboard const y)
-        {
-            return bitboard(x.get_board() & y.get_board());
-        }
-
-        [[nodiscard]] friend bitboard operator|(bitboard const x, bitboard const y)
-        {
-            return bitboard(x.get_board() | y.get_board());
-        }
-
-        [[nodiscard]] friend bitboard operator^(bitboard const x, bitboard const y)
-        {
-            return bitboard(x.get_board() ^ y.get_board());
-        }
-
-        [[nodiscard]] U64 get_bit(Square const square) const
-        {
-            return this->board_ & to_bitboard(square);
-        }
-
-        void set_bit(Square const square)
-        {
-            this->board_ |= to_bitboard(square);
-        }
-
-        void flip_bit(Square const square)
-        {
-            this->board_ ^= to_bitboard(square);
-        }
+        void flip_bit(Square square);
 
         void print(std::ostream& os = std::cout) const;
-
-        friend std::ostream& operator<<(std::ostream& os, bitboard const& bitboard)
-        {
-            bitboard.print(os);
-            return os;
-        }
+        friend std::ostream& operator<<(std::ostream& os, bitboard const& bitboard);
 
     private:
         U64 board_;
