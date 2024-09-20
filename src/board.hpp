@@ -9,13 +9,12 @@ namespace jester
     class board final
     {
     public:
+        jester::pieces pieces;
+
         board();
 
         void print(std::ostream& os = std::cout) const;
-        friend std::ostream& operator<<(std::ostream& os, board const& board);
-
-    private:
-        pieces pieces_;
+        friend std::ostream& operator<<(std::ostream& os, jester::board const& board);
     };
 }
 

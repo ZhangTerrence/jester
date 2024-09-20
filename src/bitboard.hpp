@@ -21,50 +21,47 @@ namespace jester
         a8, b8, c8, d8, e8, f8, g8, h8
     };
 
+    std::ostream& operator<<(std::ostream& os, jester::Square const& square);
+
     // Standard 64-bit bitboard
     class bitboard final
     {
     public:
         explicit bitboard();
-        explicit bitboard(U64 board);
+        explicit bitboard(jester::U64 board);
 
-        [[nodiscard]] U64 get_board() const;
+        [[nodiscard]] jester::U64 get_board() const;
 
-        [[nodiscard]] static U64 to_bitboard(Square square);
-        [[nodiscard]] static Square to_square(bitboard bitboard);
+        [[nodiscard]] static jester::U64 to_bit64(jester::Square square);
+        [[nodiscard]] static jester::Square to_square(jester::U64 bit64);
 
-        [[nodiscard]] friend bitboard operator&(bitboard x, bitboard y);
-        [[nodiscard]] friend bitboard operator|(bitboard x, bitboard y);
-        [[nodiscard]] friend bitboard operator^(bitboard x, bitboard y);
+        jester::bitboard operator&(jester::bitboard bitboard) const;
+        jester::bitboard operator|(jester::bitboard bitboard) const;
+        jester::bitboard operator^(jester::bitboard bitboard) const;
 
-        [[nodiscard]] U64 get_bit(Square square) const;
-        [[nodiscard]] U64 operator[](Square square) const;
-
-        U64& set_bit(Square square);
-        U64& operator[](Square square);
-
-        void flip_bit(Square square);
+        [[nodiscard]] int get_bit(jester::Square square) const;
+        void flip_bit(jester::Square square);
 
         void print(std::ostream& os = std::cout) const;
-        friend std::ostream& operator<<(std::ostream& os, bitboard const& bitboard);
+        friend std::ostream& operator<<(std::ostream& os, jester::bitboard const& bitboard);
 
     private:
-        U64 board_;
+        jester::U64 board_;
     };
 
     // Preset Bitboards
     // NOTE: Based on Little-Endian Rank-File Mapping
-    U64 constexpr starting_white = 0x000000000000FFFF;
-    U64 constexpr starting_black = 0xFFFF000000000000;
-    U64 constexpr starting_pawns = 0x00FF00000000FF00;
-    U64 constexpr starting_knights = 0x4200000000000042;
-    U64 constexpr starting_bishops = 0x2400000000000024;
-    U64 constexpr starting_rooks = 0x8100000000000081;
-    U64 constexpr starting_queens = 0x0800000000000008;
-    U64 constexpr starting_kings = 0x1000000000000010;
+    jester::U64 constexpr starting_white = 0x000000000000FFFF;
+    jester::U64 constexpr starting_black = 0xFFFF000000000000;
+    jester::U64 constexpr starting_pawns = 0x00FF00000000FF00;
+    jester::U64 constexpr starting_knights = 0x4200000000000042;
+    jester::U64 constexpr starting_bishops = 0x2400000000000024;
+    jester::U64 constexpr starting_rooks = 0x8100000000000081;
+    jester::U64 constexpr starting_queens = 0x0800000000000008;
+    jester::U64 constexpr starting_kings = 0x1000000000000010;
 
-    U64 constexpr light_squares = 0x55AA55AA55AA55AA;
-    U64 constexpr dark_squares = 0xAA55AA55AA55AA55;
+    jester::U64 constexpr light_squares = 0x55AA55AA55AA55AA;
+    jester::U64 constexpr dark_squares = 0xAA55AA55AA55AA55;
 }
 
 #endif
