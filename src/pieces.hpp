@@ -5,17 +5,6 @@
 
 namespace jester
 {
-    jester::U64 constexpr starting_bitboards[8] = {
-        jester::starting_white,
-        jester::starting_black,
-        jester::starting_pawns,
-        jester::starting_knights,
-        jester::starting_bishops,
-        jester::starting_rooks,
-        jester::starting_queens,
-        jester::starting_kings,
-    };
-
     enum Piece : unsigned int
     {
         White,
@@ -31,10 +20,8 @@ namespace jester
     class pieces final
     {
     public:
-        pieces();
-
-        jester::bitboard operator[](unsigned int index) const;
-        jester::bitboard& operator[](unsigned int index);
+        explicit pieces();
+        explicit pieces(std::string fen);
 
         [[nodiscard]] jester::bitboard get_all_pieces() const;
         [[nodiscard]] jester::bitboard get_white_pieces() const;
@@ -53,7 +40,9 @@ namespace jester
         [[nodiscard]] jester::bitboard get_black_king() const;
 
     private:
-        jester::bitboard piece_bitboards_[8];
+        jester::bitboard piece_bitboards[8];
+
+        void reset_pieces();
     };
 }
 

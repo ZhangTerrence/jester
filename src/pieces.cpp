@@ -1,94 +1,105 @@
 #include "pieces.hpp"
 
-jester::pieces::pieces()
+using namespace jester;
+
+pieces::pieces()
 {
-    for (int i = 0; i < 8; i++)
-    {
-        this->piece_bitboards_[i] = jester::bitboard(jester::starting_bitboards[i]);
-    }
+    reset_pieces();
 }
 
-jester::bitboard jester::pieces::operator[](unsigned int const index) const
+pieces::pieces(std::string fen)
 {
-    return this->piece_bitboards_[index];
 }
 
-jester::bitboard& jester::pieces::operator[](unsigned int const index)
+bitboard pieces::get_all_pieces() const
 {
-    return this->piece_bitboards_[index];
+    return this->piece_bitboards[Piece::White] | this->piece_bitboards[Piece::Black];
 }
 
-jester::bitboard jester::pieces::get_all_pieces() const
+bitboard pieces::get_white_pieces() const
 {
-    return this->piece_bitboards_[jester::Piece::White] | this->piece_bitboards_[jester::Piece::Black];
+    return this->piece_bitboards[Piece::White];
 }
 
-jester::bitboard jester::pieces::get_white_pieces() const
+bitboard pieces::get_black_pieces() const
 {
-    return this->piece_bitboards_[jester::Piece::White];
+    return this->piece_bitboards[Piece::Black];
 }
 
-jester::bitboard jester::pieces::get_black_pieces() const
+bitboard pieces::get_white_pawns() const
 {
-    return this->piece_bitboards_[jester::Piece::Black];
+    return this->piece_bitboards[Piece::White] & this->piece_bitboards[Piece::Pawn];
 }
 
-jester::bitboard jester::pieces::get_white_pawns() const
+bitboard pieces::get_white_knights() const
 {
-    return this->piece_bitboards_[jester::Piece::White] & this->piece_bitboards_[jester::Piece::Pawn];
+    return this->piece_bitboards[Piece::White] & this->piece_bitboards[Piece::Knight];
 }
 
-jester::bitboard jester::pieces::get_white_knights() const
+bitboard pieces::get_white_bishops() const
 {
-    return this->piece_bitboards_[jester::Piece::White] & this->piece_bitboards_[jester::Piece::Knight];
+    return this->piece_bitboards[Piece::White] & this->piece_bitboards[Piece::Bishop];
 }
 
-jester::bitboard jester::pieces::get_white_bishops() const
+bitboard pieces::get_white_rooks() const
 {
-    return this->piece_bitboards_[jester::Piece::White] & this->piece_bitboards_[jester::Piece::Bishop];
+    return this->piece_bitboards[Piece::White] & this->piece_bitboards[Piece::Rook];
 }
 
-jester::bitboard jester::pieces::get_white_rooks() const
+bitboard pieces::get_white_queen() const
 {
-    return this->piece_bitboards_[jester::Piece::White] & this->piece_bitboards_[jester::Piece::Rook];
+    return this->piece_bitboards[Piece::White] & this->piece_bitboards[Piece::Queen];
 }
 
-jester::bitboard jester::pieces::get_white_queen() const
+bitboard pieces::get_white_king() const
 {
-    return this->piece_bitboards_[jester::Piece::White] & this->piece_bitboards_[jester::Piece::Queen];
+    return this->piece_bitboards[Piece::White] & this->piece_bitboards[Piece::King];
 }
 
-jester::bitboard jester::pieces::get_white_king() const
+bitboard pieces::get_black_pawns() const
 {
-    return this->piece_bitboards_[jester::Piece::White] & this->piece_bitboards_[jester::Piece::King];
+    return this->piece_bitboards[Piece::Black] & this->piece_bitboards[Piece::Pawn];
 }
 
-jester::bitboard jester::pieces::get_black_pawns() const
+bitboard pieces::get_black_knights() const
 {
-    return this->piece_bitboards_[jester::Piece::Black] & this->piece_bitboards_[jester::Piece::Pawn];
+    return this->piece_bitboards[Piece::Black] & this->piece_bitboards[Piece::Knight];
 }
 
-jester::bitboard jester::pieces::get_black_knights() const
+bitboard pieces::get_black_bishops() const
 {
-    return this->piece_bitboards_[jester::Piece::Black] & this->piece_bitboards_[jester::Piece::Knight];
+    return this->piece_bitboards[Piece::Black] & this->piece_bitboards[Piece::Bishop];
 }
 
-jester::bitboard jester::pieces::get_black_bishops() const
+bitboard pieces::get_black_rooks() const
 {
-    return this->piece_bitboards_[jester::Piece::Black] & this->piece_bitboards_[jester::Piece::Bishop];
+    return this->piece_bitboards[Piece::Black] & this->piece_bitboards[Piece::Rook];
 }
 
-jester::bitboard jester::pieces::get_black_rooks() const
+bitboard pieces::get_black_queen() const
 {
-    return this->piece_bitboards_[jester::Piece::Black] & this->piece_bitboards_[jester::Piece::Rook];
+    return this->piece_bitboards[Piece::Black] & this->piece_bitboards[Piece::Queen];
 }
 
-jester::bitboard jester::pieces::get_black_queen() const
+bitboard pieces::get_black_king() const
 {
-    return this->piece_bitboards_[jester::Piece::Black] & this->piece_bitboards_[jester::Piece::Queen];
+    return this->piece_bitboards[Piece::Black] & this->piece_bitboards[Piece::King];
 }
 
-jester::bitboard jester::pieces::get_black_king() const
+void pieces::reset_pieces()
 {
-    return this->piece_bitboards_[jester::Piece::Black] & this->piece_bitboards_[jester::Piece::King];
+    this->piece_bitboards[Piece::White] = bitboard(Rank::Rank1 | Rank::Rank2);
+    this->piece_bitboards[Piece::Black] = bitboard(Rank::Rank7 | Rank::Rank8);
+    this->piece_bitboards[Piece::Pawn] = bitboard(Rank::Rank2 | Rank::Rank7);
+    this->piece_bitboards[Piece::Knight] = bitboard(
+        to_u64(Square::b1) | to_u64(Square::g1) | to_u64(Square::b8) | to_u64(Square::g8)
+    );
+    this->piece_bitboards[Piece::Bishop] = bitboard(
+        to_u64(Square::c1) | to_u64(Square::f1) | to_u64(Square::c8) | to_u64(Square::f8)
+    );
+    this->piece_bitboards[Piece::Rook] = bitboard(
+        to_u64(Square::a1) | to_u64(Square::h8) | to_u64(Square::a8) | to_u64(Square::h8)
+    );
+    this->piece_bitboards[Piece::Queen] = bitboard(to_u64(Square::d1) | to_u64(Square::d8));
+    this->piece_bitboards[Piece::King] = bitboard(to_u64(Square::e1) | to_u64(Square::e8));
 }
